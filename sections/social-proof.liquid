@@ -1,0 +1,24 @@
+<section class="dw-proof">
+  <p class="dw-proof__number dw-heading">{{ section.settings.number }}</p>
+  <p class="dw-eyebrow">{{ section.settings.label }}</p>
+  {% if section.settings.subtext != blank %}
+    <p class="dw-body" style="max-width:420px; margin:12px auto 0;">{{ section.settings.subtext }}</p>
+  {% endif %}
+  {% if section.settings.show_rating %}
+    <p class="dw-stars" style="margin-top:10px;">★★★★★ <span class="dw-body" style="display:inline; color:var(--dw-text-secondary);">{{ section.settings.rating_text }}</span></p>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Social proof counter",
+  "settings": [
+    { "type": "text", "id": "number", "label": "Big number", "default": "10,000+" },
+    { "type": "text", "id": "label", "label": "Label", "default": "Happy Sleepers" },
+    { "type": "textarea", "id": "subtext", "label": "Subtext", "default": "Join thousands of people upgrading the way they sleep." },
+    { "type": "checkbox", "id": "show_rating", "label": "Show star rating", "default": false },
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.8/5 average rating" }
+  ],
+  "presets": [{ "name": "Social proof counter" }]
+}
+{% endschema %}

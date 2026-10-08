@@ -1,0 +1,18 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "driftwell-footer",
+      "blocks": {
+        "col-1": { "type": "column", "settings": { "title": "Shop" } },
+        "col-2": { "type": "column", "settings": { "title": "Learn" } },
+        "col-3": { "type": "column", "settings": { "title": "Support" } },
+        "col-4": { "type": "column", "settings": { "title": "Legal" } }
+      },
+      "block_order": ["col-1", "col-2", "col-3", "col-4"],
+      "settings": {}
+    }
+  },
+  "order": ["footer"]
+}

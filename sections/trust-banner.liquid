@@ -1,0 +1,32 @@
+<section class="dw-section dw-section--tight" style="text-align:center;">
+  <div class="dw-container" style="max-width:560px;">
+    {% if section.settings.icon != blank %}
+      <img src="{{ section.settings.icon | image_url: width: 80 }}" alt="" style="width:56px; height:56px; margin:0 auto 16px; display:block;">
+    {% endif %}
+    <h2 class="dw-heading" style="font-size:26px;">{{ section.settings.heading }}</h2>
+    <p class="dw-body">{{ section.settings.subheading }}</p>
+    {% if section.settings.button_text != blank %}
+      <a href="{{ section.settings.button_link }}" class="dw-btn dw-btn--primary" style="margin-top:16px;">{{ section.settings.button_text }}</a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust / award banner",
+  "settings": [
+    { "type": "image_picker", "id": "icon", "label": "Badge / icon (optional)" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Comfort, Reimagined" },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Thoughtful design, premium materials, and innovation in every detail.",
+      "info": "Only use real certifications, awards, or press mentions here — don't claim ones you don't have."
+    },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Shop Driftwell" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Trust / award banner" }]
+}
+{% endschema %}

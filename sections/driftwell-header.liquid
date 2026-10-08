@@ -1,0 +1,57 @@
+<header class="dw-header" id="dw-header">
+  <div class="dw-container dw-header__row">
+    <button class="dw-mobile-toggle" aria-label="Open menu" data-dw-mobile-nav-toggle>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+
+    <a href="{{ routes.root_url }}" class="dw-logo">{{ section.settings.logo_text | default: shop.name }}</a>
+
+    <nav>
+      <ul class="dw-nav">
+        {% for link in linklists[section.settings.menu].links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="dw-header__icons">
+      <button aria-label="Search" data-dw-search-toggle>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <a href="{{ routes.account_url }}" aria-label="Account">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20c1.6-3.6 4.8-5.5 7.5-5.5s5.9 1.9 7.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </a>
+      <span class="dw-icon-wrap">
+        <button aria-label="Open cart" data-dw-cart-toggle>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1 11a2 2 0 01-2 1.8H9A2 2 0 017 19L6 8z" stroke="currentColor" stroke-width="1.6"/><path d="M9 8a3 3 0 016 0" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <span class="dw-cart-count">{{ cart.item_count }}</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<script>
+  (function () {
+    var header = document.getElementById('dw-header');
+    if (!header) return;
+    var onScroll = function () {
+      if (window.scrollY > 12) header.classList.add('is-stuck');
+      else header.classList.remove('is-stuck');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+
+{% render 'driftwell-cart-drawer' %}
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Logo text (used if no image logo)" },
+    { "type": "link_list", "id": "menu", "label": "Navigation menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}

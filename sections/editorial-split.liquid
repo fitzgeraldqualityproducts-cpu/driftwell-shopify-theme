@@ -1,0 +1,44 @@
+{% comment %} Reusable editorial split — used for Brand Story + the two Benefit sections. {% endcomment %}
+<section class="dw-section">
+  <div class="dw-container">
+    <div class="dw-split{% if section.settings.reverse %} dw-split--reverse{% endif %}">
+      <div>
+        {% if section.settings.image != blank %}
+          <img src="{{ section.settings.image | image_url: width: 1200 }}" loading="lazy" alt="{{ section.settings.heading }}">
+        {% else %}
+          <div style="aspect-ratio:4/3; background:var(--dw-cream); border-radius:var(--dw-radius-lg);"></div>
+        {% endif %}
+      </div>
+      <div>
+        {% if section.settings.eyebrow != blank %}
+          <p class="dw-eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        <h2 class="dw-heading" style="font-size:32px;">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p style="font-weight:600; margin:0 0 12px;">{{ section.settings.subheading }}</p>
+        {% endif %}
+        <p class="dw-body">{{ section.settings.body }}</p>
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_link }}" class="dw-btn dw-btn--primary" style="margin-top:16px;">{{ section.settings.button_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial split",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "checkbox", "id": "reverse", "label": "Reverse layout (image on right)", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Rethinking the Way You Sleep" },
+    { "type": "text", "id": "subheading", "label": "Subheading (optional)" },
+    { "type": "textarea", "id": "body", "label": "Body copy", "default": "Traditional bedding was never designed around how people actually sleep. We rethink comfort from the inside out." },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Our Story" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Editorial split" }]
+}
+{% endschema %}

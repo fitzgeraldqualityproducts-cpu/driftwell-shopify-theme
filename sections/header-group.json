@@ -1,0 +1,15 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "driftwell-announcement-bar",
+      "settings": {}
+    },
+    "header": {
+      "type": "driftwell-header",
+      "settings": {}
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

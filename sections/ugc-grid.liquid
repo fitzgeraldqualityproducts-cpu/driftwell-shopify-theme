@@ -1,0 +1,76 @@
+<section class="dw-section dw-section--tight">
+  <div class="dw-container">
+    <div class="dw-section-head">
+      <p class="dw-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="dw-heading" style="font-size:30px;">{{ section.settings.heading }}</h2>
+      <p class="dw-body">{{ section.settings.subheading }}</p>
+    </div>
+
+    <div class="dw-grid" style="grid-template-columns:repeat(4,1fr);">
+      {% for block in section.blocks %}
+        <button type="button" class="dw-ugc-tile" data-video="{% if block.settings.video %}{{ block.settings.video.sources[0].url }}{% endif %}" style="position:relative; aspect-ratio:9/16; border-radius:var(--dw-radius-md); overflow:hidden; border:none; padding:0; cursor:pointer;" {{ block.shopify_attributes }}>
+          {% if block.settings.thumbnail != blank %}
+            <img src="{{ block.settings.thumbnail | image_url: width: 500 }}" loading="lazy" alt="" style="width:100%; height:100%; object-fit:cover;">
+          {% else %}
+            <div style="width:100%; height:100%; background:var(--dw-cream);"></div>
+          {% endif %}
+          <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div id="dw-ugc-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200; align-items:center; justify-content:center;">
+  <button id="dw-ugc-close" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:28px; cursor:pointer;">&times;</button>
+  <div id="dw-ugc-video-wrap" style="max-width:420px; width:90%; aspect-ratio:9/16;"></div>
+</div>
+
+<script>
+  (function () {
+    var modal = document.getElementById('dw-ugc-modal');
+    var wrap = document.getElementById('dw-ugc-video-wrap');
+    if (!modal) return;
+    document.querySelectorAll('.dw-ugc-tile').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var src = btn.getAttribute('data-video');
+        if (!src) return;
+        wrap.innerHTML = '<video src="' + src + '" controls autoplay style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></video>';
+        modal.style.display = 'flex';
+      });
+    });
+    document.getElementById('dw-ugc-close').addEventListener('click', function () {
+      modal.style.display = 'none';
+      wrap.innerHTML = '';
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "UGC video grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real customers" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Sleep Better" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "See why customers are making better sleep part of their everyday routine." }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video tile",
+      "settings": [
+        { "type": "image_picker", "id": "thumbnail", "label": "Thumbnail" },
+        { "type": "video", "id": "video", "label": "Video file (uploaded in Shopify)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC video grid",
+      "blocks": [{ "type": "video" }, { "type": "video" }, { "type": "video" }, { "type": "video" }]
+    }
+  ]
+}
+{% endschema %}

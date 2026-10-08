@@ -1,0 +1,45 @@
+<section class="dw-section dw-section--tight">
+  <div class="dw-container">
+    <div class="dw-section-head" style="text-align:left; max-width:none; display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px;">
+      <div>
+        <p class="dw-eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="dw-heading" style="font-size:28px; margin:0;">{{ section.settings.heading }}</h2>
+      </div>
+      {% if section.settings.collection != blank %}
+        <a href="{{ collections[section.settings.collection].url }}" class="dw-btn dw-btn--secondary">View all</a>
+      {% endif %}
+    </div>
+
+    <div class="dw-carousel">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank %}
+        {% for product in coll.products limit: section.settings.limit %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}
+          <div class="dw-card">
+            <div class="dw-card__media"><span class="dw-badge dw-card__badge">Bestseller</span></div>
+            <div class="dw-card__body">
+              <p class="dw-card__title">Sample Product</p>
+              <p class="dw-card__desc">Add a collection to show real products here.</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Best sellers carousel",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Customer favorites" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best Sellers" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 3, "max": 12, "step": 1, "default": 6 }
+  ],
+  "presets": [{ "name": "Best sellers carousel" }]
+}
+{% endschema %}

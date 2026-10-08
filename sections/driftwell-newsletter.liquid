@@ -1,0 +1,30 @@
+<section class="dw-container" style="padding:40px var(--dw-gutter);">
+  <div class="dw-newsletter">
+    <h2 class="dw-heading" style="font-size:28px;">{{ section.settings.heading }}</h2>
+    <p class="dw-body">{{ section.settings.subheading }}</p>
+
+    {% form 'customer' %}
+      {{ form.errors | default: '' }}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div>
+        <input type="email" name="contact[email]" placeholder="Enter your email" required>
+        <button type="submit" class="dw-btn dw-btn--primary">{{ section.settings.button_text }}</button>
+      </div>
+      {% if form.posted_successfully? %}
+        <p class="dw-body" style="margin-top:10px;">You're on the list.</p>
+      {% endif %}
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Better Sleep Starts Here" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Get sleep tips, product launches, and early access to offers." },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Join Us" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

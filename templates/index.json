@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "best-sellers": {
+      "type": "best-sellers-carousel",
+      "settings": { "heading": "Best Sellers", "eyebrow": "Customer favorites" }
+    },
+    "hero": { "type": "hero" },
+    "social-proof": { "type": "social-proof" },
+    "featured-products": { "type": "featured-products" },
+    "shop-by-category": { "type": "shop-by-category" },
+    "brand-story": {
+      "type": "editorial-split",
+      "settings": {
+        "eyebrow": "Our Story",
+        "heading": "Rethinking the Way You Sleep",
+        "body": "Traditional bedding was never designed around how people actually sleep. We rethink comfort from the inside out — softness, breathability, and support that work together instead of trading off.",
+        "button_text": "Our Story"
+      }
+    },
+    "why-us": { "type": "why-us-pillars" },
+    "benefit-1": {
+      "type": "editorial-split",
+      "settings": {
+        "heading": "Comforters That Adapt",
+        "subheading": "Warm when you want it. Breathable when you need it.",
+        "body": "Plush comforters designed to balance softness, warmth, and breathability.",
+        "button_text": "Shop Comforters",
+        "reverse": false
+      }
+    },
+    "benefit-2": {
+      "type": "editorial-split",
+      "settings": {
+        "heading": "Pillows That Support You",
+        "subheading": "Comfort that moves with you.",
+        "body": "Ergonomic, cloud-soft pillows designed for different sleep positions and support needs.",
+        "button_text": "Shop Pillows",
+        "reverse": true
+      }
+    },
+    "trust": { "type": "trust-banner" },
+    "testimonials": { "type": "testimonials" },
+    "ugc": { "type": "ugc-grid" },
+    "bestsellers-repeat": {
+      "type": "best-sellers-carousel",
+      "settings": { "heading": "Shop the Favorites", "eyebrow": "Still deciding?" }
+    },
+    "final-cta": { "type": "final-cta" },
+    "newsletter": { "type": "driftwell-newsletter" }
+  },
+  "order": [
+    "best-sellers",
+    "hero",
+    "social-proof",
+    "featured-products",
+    "shop-by-category",
+    "brand-story",
+    "why-us",
+    "benefit-1",
+    "benefit-2",
+    "trust",
+    "testimonials",
+    "ugc",
+    "bestsellers-repeat",
+    "final-cta",
+    "newsletter"
+  ]
+}

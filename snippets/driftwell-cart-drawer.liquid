@@ -1,0 +1,84 @@
+{%- liquid
+  assign free_shipping_threshold = settings.dw_free_shipping_threshold | default: 7500
+  assign remaining = free_shipping_threshold | minus: cart.total_price
+  assign progress = cart.total_price | times: 100.0 | divided_by: free_shipping_threshold
+  if progress > 100
+    assign progress = 100
+  endif
+-%}
+
+<div class="dw-cart-overlay" id="dw-cart-overlay" data-dw-cart-close></div>
+
+<div class="dw-cart-drawer" id="dw-cart-drawer" role="dialog" aria-label="Cart">
+  <div class="dw-cart-drawer__header">
+    <div>
+      <p class="dw-cart-drawer__title">Your Sleep Stack</p>
+      <p class="dw-cart-drawer__sub">Build your perfect sleep setup.</p>
+    </div>
+    <button aria-label="Close cart" data-dw-cart-close style="background:none; border:none; cursor:pointer; font-size:22px;">&times;</button>
+  </div>
+
+  <div class="dw-cart-drawer__items">
+    {% if cart.item_count == 0 %}
+      <p class="dw-body" style="text-align:center; margin-top:40px;">Your sleep stack is empty.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="dw-btn dw-btn--primary" style="width:100%; margin-top:12px;">Continue Shopping</a>
+    {% else %}
+      {% for item in cart.items %}
+        <div class="dw-cart-line">
+          <img src="{{ item.image | image_url: width: 144 }}" alt="{{ item.title }}">
+          <div style="flex:1;">
+            <p style="font-weight:600; font-size:14px; margin:0 0 2px;">{{ item.product.title }}</p>
+            {% unless item.variant.title == 'Default Title' %}
+              <p class="dw-body" style="font-size:12px; margin:0 0 6px;">{{ item.variant.title }}</p>
+            {% endunless %}
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:13px;">Qty {{ item.quantity }}</span>
+              <span style="font-weight:600; font-size:13px;">{{ item.final_line_price | money }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {% if cart.item_count > 0 %}
+    <div class="dw-cart-drawer__footer">
+      <div class="dw-shipbar-track">
+        <div class="dw-shipbar-fill" style="width:{{ progress }}%;"></div>
+      </div>
+      {% if remaining > 0 %}
+        <p class="dw-body" style="font-size:12px; margin:-12px 0 16px;">You're {{ remaining | money }} away from free shipping.</p>
+      {% else %}
+        <p class="dw-body" style="font-size:12px; margin:-12px 0 16px;">You've unlocked free shipping.</p>
+      {% endif %}
+
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span style="font-weight:600;">Subtotal</span>
+        <span style="font-weight:600;">{{ cart.total_price | money }}</span>
+      </div>
+
+      <a href="{{ routes.cart_url }}" class="dw-btn dw-btn--primary" style="width:100%; margin-bottom:8px;">Checkout</a>
+      <button type="button" class="dw-btn dw-btn--secondary" style="width:100%;" data-dw-cart-close>Continue Shopping</button>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  (function () {
+    var drawer = document.getElementById('dw-cart-drawer');
+    var overlay = document.getElementById('dw-cart-overlay');
+    if (!drawer || !overlay) return;
+
+    function open() { drawer.classList.add('is-open'); overlay.classList.add('is-open'); }
+    function close() { drawer.classList.remove('is-open'); overlay.classList.remove('is-open'); }
+
+    document.querySelectorAll('[data-dw-cart-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', open);
+    });
+    document.querySelectorAll('[data-dw-cart-close]').forEach(function (el) {
+      el.addEventListener('click', close);
+    });
+
+    window.dwOpenCart = open;
+  })();
+</script>

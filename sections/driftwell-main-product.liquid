@@ -1,0 +1,144 @@
+{%- liquid
+  assign product = product
+  assign variant = product.selected_or_first_available_variant
+  assign compare_at = variant.compare_at_price
+  assign on_sale = false
+  if compare_at > variant.price
+    assign on_sale = true
+    assign savings = compare_at | minus: variant.price
+  endif
+-%}
+
+<section class="dw-container" style="padding:40px var(--dw-gutter) 80px;">
+  <div class="dw-split" style="align-items:flex-start;">
+    <div>
+      {% if product.featured_image %}
+        <img id="dw-product-main-image" src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.featured_image.alt }}" style="width:100%; border-radius:var(--dw-radius-lg); display:block; margin-bottom:12px;">
+      {% endif %}
+      <div style="display:flex; gap:10px; overflow-x:auto;">
+        {% for image in product.images %}
+          <img src="{{ image | image_url: width: 160 }}" alt="" data-full="{{ image | image_url: width: 1200 }}" class="dw-thumb" style="width:72px; height:72px; object-fit:cover; border-radius:8px; cursor:pointer; border:1px solid var(--dw-gray);">
+        {% endfor %}
+      </div>
+    </div>
+
+    <div>
+      {% if product.tags contains 'bestseller' %}
+        <span class="dw-badge" style="margin-bottom:12px;">Bestseller</span>
+      {% endif %}
+      <h1 class="dw-heading" style="font-size:30px;">{{ product.title }}</h1>
+
+      {% if product.metafields.custom.short_benefit != blank %}
+        <p class="dw-body" style="font-size:16px;">{{ product.metafields.custom.short_benefit }}</p>
+      {% endif %}
+
+      <div class="dw-card__price" style="font-size:18px; margin:16px 0;">
+        {% if on_sale %}
+          <span class="dw-price-sale" style="font-size:22px;">{{ variant.price | money }}</span>
+          <span class="dw-price-compare">{{ compare_at | money }}</span>
+          <span class="dw-price-save">SAVE {{ savings | money }}</span>
+        {% else %}
+          <span class="dw-price-sale" style="font-size:22px;">{{ variant.price | money }}</span>
+        {% endif %}
+      </div>
+
+      {% form 'product', product %}
+        {% if product.has_only_default_variant == false %}
+          {% for option in product.options_with_values %}
+            <div style="margin-bottom:16px;">
+              <p style="font-size:13px; font-weight:600; margin-bottom:6px;">{{ option.name }}</p>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                {% for value in option.values %}
+                  <label style="border:1px solid var(--dw-gray); border-radius:999px; padding:8px 16px; font-size:13px; cursor:pointer;">
+                    <input type="radio" name="options[{{ option.name }}]" value="{{ value }}" style="margin-right:6px;"
+                      {% if option.selected_value == value %}checked{% endif %}>
+                    {{ value }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <select name="id" style="display:none;">
+          {% for v in product.variants %}
+            <option value="{{ v.id }}" {% if v.id == variant.id %}selected{% endif %}>{{ v.title }}</option>
+          {% endfor %}
+        </select>
+
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px;">
+          <input type="number" name="quantity" value="1" min="1" style="width:70px; padding:12px; border-radius:8px; border:1px solid var(--dw-gray);">
+          <button type="submit" name="add" class="dw-btn dw-btn--primary" style="flex:1;" {% unless variant.available %}disabled{% endunless %}>
+            {% if variant.available %}Add to Cart{% else %}Sold Out{% endif %}
+          </button>
+        </div>
+        <button type="button" class="dw-btn dw-btn--secondary" style="width:100%;" data-dw-buy-now>Buy It Now</button>
+      {% endform %}
+
+      <div class="dw-body" style="font-size:13px; margin-top:20px; display:flex; flex-direction:column; gap:6px;">
+        {% if section.settings.free_shipping_text != blank %}<span>✓ {{ section.settings.free_shipping_text }}</span>{% endif %}
+        {% if section.settings.returns_text != blank %}<span>✓ {{ section.settings.returns_text }}</span>{% endif %}
+        {% if section.settings.warranty_text != blank %}<span>✓ {{ section.settings.warranty_text }}</span>{% endif %}
+      </div>
+
+      <div style="margin-top:28px; border-top:1px solid var(--dw-gray);">
+        {% assign accordion_items = 'Description,Materials,Sizing,Care,Shipping & Returns,Warranty' | split: ',' %}
+        {% for item in accordion_items %}
+          <details style="border-bottom:1px solid var(--dw-gray); padding:14px 0;">
+            <summary style="cursor:pointer; font-weight:600; font-size:14px;">{{ item }}</summary>
+            <div class="dw-body" style="margin-top:10px; font-size:13px;">
+              {% if item == 'Description' %}
+                {{ product.description }}
+              {% else %}
+                Add {{ item | downcase }} details for this product in the theme editor or product metafields.
+              {% endif %}
+            </div>
+          </details>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="dw-sticky-atc" style="position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--dw-gray); padding:12px 16px; display:none; z-index:30;">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+    <div>
+      <p style="font-weight:600; font-size:13px; margin:0;">{{ product.title }}</p>
+      <p style="font-size:13px; margin:0;">{{ variant.price | money }}</p>
+    </div>
+    <button type="button" class="dw-btn dw-btn--primary" data-dw-sticky-add>Add to Cart</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    document.querySelectorAll('.dw-thumb').forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        var main = document.getElementById('dw-product-main-image');
+        if (main) main.src = thumb.getAttribute('data-full');
+      });
+    });
+
+    var bar = document.getElementById('dw-sticky-atc');
+    var form = document.querySelector('form[action*="/cart/add"]');
+    if (bar && form && window.innerWidth < 900) {
+      window.addEventListener('scroll', function () {
+        var rect = form.getBoundingClientRect();
+        bar.style.display = rect.bottom < 0 ? 'block' : 'none';
+      }, { passive: true });
+      var stickyBtn = document.querySelector('[data-dw-sticky-add]');
+      if (stickyBtn) stickyBtn.addEventListener('click', function () { form.requestSubmit(); });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product page",
+  "settings": [
+    { "type": "text", "id": "free_shipping_text", "label": "Free shipping message", "default": "Free shipping" },
+    { "type": "text", "id": "returns_text", "label": "Returns message", "default": "Easy returns" },
+    { "type": "text", "id": "warranty_text", "label": "Warranty message" }
+  ]
+}
+{% endschema %}

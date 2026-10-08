@@ -1,0 +1,59 @@
+<footer class="dw-footer">
+  <div class="dw-container">
+    <div class="dw-footer__grid">
+      {% for block in section.blocks %}
+        <div {{ block.shopify_attributes }}>
+          <h4>{{ block.settings.title }}</h4>
+          <ul>
+            {% for link in linklists[block.settings.menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="dw-footer__bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
+      <div style="display:flex; gap:16px;">
+        {% if section.settings.instagram != blank %}<a href="{{ section.settings.instagram }}">Instagram</a>{% endif %}
+        {% if section.settings.tiktok != blank %}<a href="{{ section.settings.tiktok }}">TikTok</a>{% endif %}
+        {% if section.settings.pinterest != blank %}<a href="{{ section.settings.pinterest }}">Pinterest</a>{% endif %}
+        {% if section.settings.facebook != blank %}<a href="{{ section.settings.facebook }}">Facebook</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "url", "id": "instagram", "label": "Instagram URL" },
+    { "type": "url", "id": "tiktok", "label": "TikTok URL" },
+    { "type": "url", "id": "pinterest", "label": "Pinterest URL" },
+    { "type": "url", "id": "facebook", "label": "Facebook URL" }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Link column",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "column", "settings": { "title": "Shop" } },
+        { "type": "column", "settings": { "title": "Learn" } },
+        { "type": "column", "settings": { "title": "Support" } },
+        { "type": "column", "settings": { "title": "Legal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,63 @@
+{% comment %}
+  Renders one product card.
+  Usage: {% render 'product-card', product: product, badge: 'Bestseller' %}
+{% endcomment %}
+
+{%- liquid
+  assign card_badge = badge
+  if card_badge == blank and product.tags contains 'bestseller'
+    assign card_badge = 'Bestseller'
+  endif
+
+  assign first_image = product.featured_image
+  assign second_image = product.images[1]
+
+  assign variant = product.selected_or_first_available_variant
+  assign compare_at = variant.compare_at_price
+  assign on_sale = false
+  if compare_at > variant.price
+    assign on_sale = true
+    assign savings = compare_at | minus: variant.price
+  endif
+-%}
+
+<a href="{{ product.url }}" class="dw-card" data-dw-product-card>
+  <div class="dw-card__media">
+    {% if card_badge %}
+      <span class="dw-badge dw-card__badge{% if card_badge == 'Sale' %} dw-badge--sale{% endif %}">{{ card_badge }}</span>
+    {% endif %}
+
+    {% if first_image %}
+      <img src="{{ first_image | image_url: width: 600 }}" loading="lazy" width="600" height="600" alt="{{ first_image.alt | default: product.title }}">
+    {% else %}
+      <img src="{{ 'product-placeholder.svg' | asset_url }}" loading="lazy" alt="{{ product.title }}">
+    {% endif %}
+
+    {% if second_image %}
+      <img class="dw-img--secondary" src="{{ second_image | image_url: width: 600 }}" loading="lazy" width="600" height="600" alt="">
+    {% endif %}
+
+    <div class="dw-card__quickadd">
+      <button type="button" class="dw-btn dw-btn--light" style="width:100%;" data-dw-quick-add data-variant-id="{{ variant.id }}">
+        Quick Add
+      </button>
+    </div>
+  </div>
+
+  <div class="dw-card__body">
+    <p class="dw-card__title">{{ product.title }}</p>
+    {% if product.metafields.custom.short_benefit != blank %}
+      <p class="dw-card__desc">{{ product.metafields.custom.short_benefit }}</p>
+    {% endif %}
+
+    <div class="dw-card__price">
+      {% if on_sale %}
+        <span class="dw-price-sale">{{ variant.price | money }}</span>
+        <span class="dw-price-compare">{{ compare_at | money }}</span>
+        <span class="dw-price-save">SAVE {{ savings | money }}</span>
+      {% else %}
+        <span class="dw-price-sale">{{ variant.price | money }}</span>
+      {% endif %}
+    </div>
+  </div>
+</a>
